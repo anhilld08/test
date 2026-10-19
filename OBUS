@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n, K;
+int c[25][25];
+int x[25];
+bool visited[25];
+int cmin = INT_MAX;
+int oncar = 0;
+int dist = 0;
+int bestdist = INT_MAX;
+
+bool check(int v) {
+    if (visited[v]) return false;
+    if (v > n) {
+        if (!visited[v - n]) return false;
+    } else {
+        if (oncar >= K) return false;
+    }
+    return true;
+}
+
+void Try(int k) {
+    for (int i = 1; i <= 2 * n; i++) {
+        if (check(i)) {
+            x[k] = i;
+            dist += c[x[k - 1]][i];
+            visited[i] = true;
+            if (i <= n) oncar++; else oncar--;
+
+            if (k == 2 * n) {
+                bestdist = min(bestdist, dist + c[i][0]);
+            } else if (dist + (2 * n + 1 - k) * cmin < bestdist) {
+                Try(k + 1);
+            }
+
+            if (i <= n) oncar--; else oncar++;
+            visited[i] = false;
+            dist -= c[x[k - 1]][i];
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cin >> n >> K;
+    for (int i = 0; i <= 2 * n; i++) {
+        for (int j = 0; j <= 2 * n; j++) {
+            cin >> c[i][j];
+            if (i != j) cmin = min(cmin, c[i][j]);
+        }
+    }
+
+    x[0] = 0;
+    Try(1);
+    cout << bestdist << endl;
+    return 0;
+}
