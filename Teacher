@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int m, n;
+int bestcnt = INT_MAX;          // đáp án: tải lớn nhất nhỏ nhất
+int cnt = 0;                    // tải lớn nhất của phương án hiện tại
+int lower_;                     // cận dưới = ceil(n/m)
+vector<vector<int>> lst;        // lst[j] = các môn gv j dạy được
+vector<int> subject;            // subject[k] = gv dạy môn k
+vector<int> load;               // load[j] = tải của gv j
+vector<vector<bool>> same;      // same[i][k] = môn i, k trùng giờ
+
+bool has(int i, int k) {
+    for (int y : lst[i])
+        if (y == k) return true;
+    return false;
+}
+
+bool check(int j, int k) {
+    if (!has(j, k)) return false;
+    for (int i = 1; i < k; i++)
+        if (subject[i] == j && same[i][k]) return false;
+    return true;
+}
+
+void Try(int k) {
+    if (bestcnt == lower_) return;              // đã tối ưu, dừng sớm
+    if (k > n) {
+        bestcnt = cnt;
+        return;
+    }
+    for (int j = 1; j <= m; j++) {
+        if (load[j] + 1 >= bestcnt) continue;   // nhánh cận
+        if (!check(j, k)) continue;
+
+        subject[k] = j;
+        load[j]++;
+        int old = cnt;
+        cnt = max(cnt, load[j]);
+
+        Try(k + 1);
+
+        cnt = old;
+        load[j]--;
+        subject[k] = 0;
+    }
+}
+
+int main() {
+    cin >> m >> n;
+    lst.assign(m + 1, {});
+    subject.assign(n + 1, 0);
+    load.assign(m + 1, 0);
+    same.assign(n + 1, vector<bool>(n + 1, false));
+    lower_ = (n + m - 1) / m;
+
+    for (int i = 1; i <= m; i++) {
+        int numb, x;
+        cin >> numb;
+        while (numb--) {
+            cin >> x;
+            lst[i].push_back(x);
+        }
+    }
+
+    int K;
+    cin >> K;
+    while (K--) {
+        int a, b;
+        cin >> a >> b;
+        same[a][b] = same[b][a] = true;
+    }
+
+    Try(1);
+    cout << (bestcnt == INT_MAX ? -1 : bestcnt) << "\n";
+    return 0;
+}
