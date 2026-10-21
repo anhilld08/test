@@ -2,13 +2,13 @@
 using namespace std;
 
 int m, n;
-int bestcnt = INT_MAX;          // đáp án: tải lớn nhất nhỏ nhất
-int cnt = 0;                    // tải lớn nhất của phương án hiện tại
-int lower_;                     // cận dưới = ceil(n/m)
-vector<vector<int>> lst;        // lst[j] = các môn gv j dạy được
-vector<int> subject;            // subject[k] = gv dạy môn k
-vector<int> load;               // load[j] = tải của gv j
-vector<vector<bool>> same;      // same[i][k] = môn i, k trùng giờ
+int bestcnt = INT_MAX;          
+int cnt = 0;                    
+int lower_;                     
+vector<vector<int>> lst;        
+vector<int> subject;            
+vector<int> load;               
+vector<vector<bool>> same;      
 
 bool has(int i, int k) {
     for (int y : lst[i])
@@ -24,13 +24,13 @@ bool check(int j, int k) {
 }
 
 void Try(int k) {
-    if (bestcnt == lower_) return;              // đã tối ưu, dừng sớm
+    if (bestcnt == lower_) return;              
     if (k > n) {
         bestcnt = cnt;
         return;
     }
     for (int j = 1; j <= m; j++) {
-        if (load[j] + 1 >= bestcnt) continue;   // nhánh cận
+        if (load[j] + 1 >= bestcnt) continue;  
         if (!check(j, k)) continue;
 
         subject[k] = j;
