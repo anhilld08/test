@@ -1,0 +1,37 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    long long s = 0;
+    long long minChan = 0;
+    long long minLe = LLONG_MAX;
+    long long ans = LLONG_MIN;
+
+    for (int i = 1; i <= n; i++) {
+        int x;
+        cin >> x;
+
+        s += x;
+
+        if (s % 2 == 0) {
+            if (minChan != LLONG_MAX) {
+                ans = max(ans, s - minChan);
+            }
+            minChan = min(minChan, s);
+        }
+        else {
+            if (minLe != LLONG_MAX) {
+                ans = max(ans, s - minLe);
+            }
+            minLe = min(minLe, s);
+        }
+    }
+
+    cout << ans;
+
+    return 0;
+}
